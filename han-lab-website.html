@@ -1,0 +1,764 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Han Lab | Harvard University</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Inter:wght@300;400;500;600&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --crimson:#A51C30;
+  --navy:#0F1F38;
+  --teal:#0891B2;
+  --teal-light:#E0F7FA;
+  --teal-mid:#0E7490;
+  --warm-white:#F9F7F3;
+  --off-white:#F2EEE8;
+  --text-dark:#18181B;
+  --text-mid:#3F3F46;
+  --text-soft:#71717A;
+  --border-light:#E4E0D8;
+  --card-bg:#FFFFFF;
+  --ff-display:'Playfair Display',Georgia,serif;
+  --ff-body:'Inter',system-ui,sans-serif;
+  --ff-mono:'Space Mono',monospace;
+}
+html{scroll-behavior:smooth;font-size:16px}
+body{font-family:var(--ff-body);background:var(--warm-white);color:var(--text-dark);line-height:1.7;-webkit-font-smoothing:antialiased}
+
+/* NAV */
+nav{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(249,247,243,0.92);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-bottom:1px solid var(--border-light)}
+.nav-inner{max-width:1140px;margin:0 auto;padding:0 1.5rem;display:flex;align-items:center;justify-content:space-between;height:60px}
+.nav-logo{font-family:var(--ff-display);font-size:1.2rem;font-weight:700;color:var(--navy);text-decoration:none;letter-spacing:-0.01em}
+.nav-logo span{color:var(--crimson)}
+.nav-links{display:flex;gap:1.75rem;list-style:none}
+.nav-links a{font-size:0.82rem;font-weight:500;color:var(--text-mid);text-decoration:none;letter-spacing:0.05em;text-transform:uppercase;transition:color 0.2s}
+.nav-links a:hover{color:var(--teal)}
+.hamburger{display:none;flex-direction:column;gap:5px;cursor:pointer;padding:4px}
+.hamburger span{display:block;width:22px;height:2px;background:var(--text-dark);transition:all 0.3s}
+.mobile-menu{display:none;position:fixed;top:60px;left:0;right:0;background:var(--warm-white);border-bottom:1px solid var(--border-light);padding:1.5rem;z-index:99}
+.mobile-menu.open{display:block}
+.mobile-menu a{display:block;padding:0.6rem 0;font-size:1rem;font-weight:500;color:var(--text-dark);text-decoration:none;border-bottom:1px solid var(--border-light)}
+.mobile-menu a:last-child{border-bottom:none}
+
+/* HERO */
+.hero{min-height:100vh;position:relative;overflow:hidden;display:flex;align-items:center;background:var(--navy)}
+.hero-canvas{position:absolute;inset:0;overflow:hidden}
+.mol{position:absolute;border-radius:50%;background:rgba(8,145,178,0.15);animation:drift linear infinite}
+.mol.sm{width:6px;height:6px}
+.mol.md{width:12px;height:12px;background:rgba(8,145,178,0.1)}
+.mol.lg{width:20px;height:20px;background:rgba(165,28,48,0.08)}
+.mol.xs{width:3px;height:3px;background:rgba(255,255,255,0.12)}
+.connector{position:absolute;background:rgba(8,145,178,0.06);height:1px;transform-origin:left center}
+@keyframes drift{
+  0%{transform:translate(0,0)}
+  25%{transform:translate(var(--dx1),var(--dy1))}
+  50%{transform:translate(var(--dx2),var(--dy2))}
+  75%{transform:translate(var(--dx3),var(--dy3))}
+  100%{transform:translate(0,0)}
+}
+.hero-overlay{position:absolute;inset:0;background:linear-gradient(135deg,rgba(15,31,56,0.97) 0%,rgba(15,31,56,0.85) 60%,rgba(8,145,178,0.2) 100%)}
+.hero-content{position:relative;z-index:2;max-width:1140px;margin:0 auto;padding:0 1.5rem;padding-top:60px}
+.hero-eyebrow{font-family:var(--ff-mono);font-size:0.72rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--teal);margin-bottom:1.5rem;display:flex;align-items:center;gap:0.75rem}
+.hero-eyebrow::before{content:'';display:block;width:32px;height:1px;background:var(--teal)}
+.hero-title{font-family:var(--ff-display);font-size:clamp(2.4rem,6vw,4.4rem);font-weight:700;line-height:1.1;letter-spacing:-0.02em;color:#FFFFFF;margin-bottom:1.5rem}
+.hero-title em{font-style:italic;color:var(--teal)}
+.hero-body{font-size:1.05rem;line-height:1.75;color:rgba(255,255,255,0.72);max-width:600px;margin-bottom:2.5rem}
+.hero-actions{display:flex;flex-wrap:wrap;gap:1rem}
+.btn{display:inline-flex;align-items:center;gap:0.5rem;padding:0.7rem 1.4rem;font-family:var(--ff-body);font-size:0.85rem;font-weight:500;border-radius:4px;text-decoration:none;transition:all 0.2s;letter-spacing:0.02em;cursor:pointer;border:none}
+.btn-primary{background:var(--teal);color:#fff}
+.btn-primary:hover{background:var(--teal-mid)}
+.btn-outline{background:transparent;color:#fff;border:1px solid rgba(255,255,255,0.35)}
+.btn-outline:hover{border-color:#fff;background:rgba(255,255,255,0.08)}
+.hero-scroll{position:absolute;bottom:2rem;left:50%;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:0.5rem;color:rgba(255,255,255,0.4);font-size:0.7rem;letter-spacing:0.1em;text-transform:uppercase;font-family:var(--ff-mono)}
+.scroll-line{width:1px;height:40px;background:linear-gradient(to bottom,transparent,rgba(255,255,255,0.35));animation:scrollpulse 2s ease-in-out infinite}
+@keyframes scrollpulse{0%,100%{opacity:0.3}50%{opacity:1}}
+.hero-affil{margin-top:3.5rem;padding-top:2rem;border-top:1px solid rgba(255,255,255,0.1);display:flex;align-items:center;gap:0.75rem;color:rgba(255,255,255,0.45);font-size:0.78rem;letter-spacing:0.04em}
+.affil-dot{width:4px;height:4px;border-radius:50%;background:var(--crimson);flex-shrink:0}
+
+/* SECTION SHELL */
+section{padding:6rem 1.5rem}
+.section-inner{max-width:1140px;margin:0 auto}
+.section-label{font-family:var(--ff-mono);font-size:0.68rem;letter-spacing:0.18em;text-transform:uppercase;color:var(--teal);margin-bottom:1rem;display:flex;align-items:center;gap:0.6rem}
+.section-label::after{content:'';flex:1;height:1px;background:var(--border-light)}
+h2.section-title{font-family:var(--ff-display);font-size:clamp(1.8rem,3.5vw,2.8rem);font-weight:700;line-height:1.15;letter-spacing:-0.02em;color:var(--navy);margin-bottom:1rem}
+.section-sub{font-size:1.05rem;color:var(--text-soft);max-width:680px;line-height:1.75;margin-bottom:3.5rem}
+
+/* ABOUT STRIP */
+#about{background:var(--off-white)}
+.about-grid{display:grid;grid-template-columns:1fr 1fr;gap:5rem;align-items:center}
+.about-stats{display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;margin-top:2.5rem}
+.stat-box{border-left:2px solid var(--teal);padding-left:1.1rem}
+.stat-num{font-family:var(--ff-display);font-size:2.2rem;font-weight:700;color:var(--navy);line-height:1}
+.stat-label{font-size:0.78rem;color:var(--text-soft);letter-spacing:0.04em;margin-top:0.25rem}
+.about-visual{position:relative;display:flex;justify-content:center;align-items:center}
+.cell-diagram{width:280px;height:280px;position:relative}
+.cd-outer{width:100%;height:100%;border-radius:50%;border:1.5px dashed rgba(8,145,178,0.3);display:flex;align-items:center;justify-content:center;animation:rotateSlow 30s linear infinite}
+.cd-inner{width:60%;height:60%;border-radius:50%;background:rgba(15,31,56,0.06);border:1px solid rgba(15,31,56,0.12);display:flex;align-items:center;justify-content:center}
+.cd-nucleus{width:40%;height:40%;border-radius:50%;background:var(--navy);opacity:0.15}
+.cd-dot{position:absolute;border-radius:50%}
+@keyframes rotateSlow{from{transform:rotate(0)}to{transform:rotate(360deg)}}
+.floating-label{position:absolute;font-family:var(--ff-mono);font-size:0.65rem;letter-spacing:0.08em;color:var(--teal);white-space:nowrap}
+
+/* RESEARCH */
+#research{background:#fff}
+.program-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:2rem}
+.program-card{border:1px solid var(--border-light);border-radius:8px;padding:2rem;position:relative;overflow:hidden;transition:transform 0.25s,box-shadow 0.25s;background:#fff}
+.program-card:hover{transform:translateY(-4px);box-shadow:0 12px 40px rgba(15,31,56,0.08)}
+.program-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px}
+.program-card:nth-child(1)::before{background:var(--teal)}
+.program-card:nth-child(2)::before{background:#7C3AED}
+.program-card:nth-child(3)::before{background:#059669}
+.program-num{font-family:var(--ff-mono);font-size:0.65rem;letter-spacing:0.15em;color:var(--text-soft);margin-bottom:1rem}
+.program-icon{width:44px;height:44px;border-radius:8px;display:flex;align-items:center;justify-content:center;margin-bottom:1.25rem;font-size:1.4rem}
+.program-card:nth-child(1) .program-icon{background:var(--teal-light);color:var(--teal)}
+.program-card:nth-child(2) .program-icon{background:#F3F0FF;color:#7C3AED}
+.program-card:nth-child(3) .program-icon{background:#ECFDF5;color:#059669}
+.program-title{font-family:var(--ff-display);font-size:1.15rem;font-weight:600;color:var(--navy);margin-bottom:0.75rem;line-height:1.3}
+.program-desc{font-size:0.88rem;color:var(--text-soft);line-height:1.75;margin-bottom:1.25rem}
+.program-tags{display:flex;flex-wrap:wrap;gap:0.4rem}
+.tag{font-size:0.68rem;padding:0.25rem 0.6rem;border-radius:100px;background:var(--off-white);color:var(--text-mid);letter-spacing:0.04em;font-family:var(--ff-mono)}
+
+/* PEOPLE */
+#people{background:var(--off-white)}
+.pi-card{display:grid;grid-template-columns:240px 1fr;gap:3rem;align-items:start;background:#fff;border-radius:8px;padding:2.5rem;border:1px solid var(--border-light);margin-bottom:3.5rem}
+.pi-photo{width:100%;aspect-ratio:1;border-radius:6px;background:var(--navy);position:relative;overflow:hidden;display:flex;align-items:center;justify-content:center}
+.pi-initials{font-family:var(--ff-display);font-size:3.5rem;color:rgba(255,255,255,0.25);font-weight:700;letter-spacing:-0.05em}
+.pi-photo-teal{position:absolute;bottom:0;left:0;right:0;height:6px;background:var(--teal)}
+.pi-name{font-family:var(--ff-display);font-size:1.7rem;font-weight:700;color:var(--navy);margin-bottom:0.25rem}
+.pi-title{font-size:0.85rem;color:var(--crimson);font-weight:500;letter-spacing:0.04em;margin-bottom:1rem}
+.pi-bio{font-size:0.9rem;color:var(--text-mid);line-height:1.8;margin-bottom:1.5rem}
+.pi-links{display:flex;flex-wrap:wrap;gap:0.75rem}
+.pi-link{font-size:0.78rem;color:var(--teal);text-decoration:none;font-family:var(--ff-mono);letter-spacing:0.04em;display:flex;align-items:center;gap:0.3rem}
+.pi-link:hover{color:var(--teal-mid)}
+.pi-awards{margin-top:1.5rem;padding-top:1.5rem;border-top:1px solid var(--border-light)}
+.pi-awards-title{font-family:var(--ff-mono);font-size:0.65rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--text-soft);margin-bottom:0.75rem}
+.award-item{font-size:0.82rem;color:var(--text-mid);padding:0.3rem 0;display:flex;gap:0.5rem;align-items:baseline}
+.award-year{font-family:var(--ff-mono);font-size:0.72rem;color:var(--text-soft);min-width:36px}
+.team-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1.5rem}
+.member-card{background:#fff;border-radius:8px;overflow:hidden;border:1px solid var(--border-light);transition:transform 0.2s}
+.member-card:hover{transform:translateY(-2px)}
+.member-photo{height:160px;background:var(--navy);display:flex;align-items:center;justify-content:center;position:relative}
+.member-initials{font-family:var(--ff-display);font-size:2rem;color:rgba(255,255,255,0.2);font-weight:700}
+.member-accent{position:absolute;bottom:0;left:0;right:0;height:3px}
+.member-info{padding:1rem 1rem 1.25rem}
+.member-name{font-weight:600;font-size:0.9rem;color:var(--navy);margin-bottom:0.15rem}
+.member-role{font-size:0.76rem;color:var(--text-soft);font-family:var(--ff-mono);letter-spacing:0.04em}
+.member-project{font-size:0.8rem;color:var(--text-mid);margin-top:0.5rem;line-height:1.5}
+.openings-note{margin-top:2.5rem;background:var(--teal-light);border-left:3px solid var(--teal);border-radius:0 6px 6px 0;padding:1.25rem 1.5rem;font-size:0.88rem;color:var(--text-dark)}
+.openings-note a{color:var(--teal-mid);font-weight:500;text-decoration:underline}
+
+/* PUBLICATIONS */
+#publications{background:#fff}
+.pub-list{display:flex;flex-direction:column;gap:1.25rem}
+.pub-item{display:grid;grid-template-columns:auto 1fr;gap:1.25rem;align-items:start;padding:1.5rem;border:1px solid var(--border-light);border-radius:8px;background:#fff;transition:border-color 0.2s}
+.pub-item:hover{border-color:var(--teal)}
+.pub-year-badge{font-family:var(--ff-mono);font-size:0.7rem;letter-spacing:0.08em;color:#fff;background:var(--navy);padding:0.3rem 0.5rem;border-radius:3px;min-width:36px;text-align:center;margin-top:3px}
+.pub-title{font-family:var(--ff-display);font-size:0.95rem;font-weight:600;color:var(--navy);line-height:1.4;margin-bottom:0.35rem}
+.pub-authors{font-size:0.78rem;color:var(--text-soft);margin-bottom:0.4rem}
+.pub-authors strong{color:var(--text-dark)}
+.pub-journal{display:flex;align-items:center;gap:0.6rem}
+.pub-journal-name{font-size:0.78rem;font-style:italic;color:var(--text-mid)}
+.journal-badge{font-size:0.65rem;font-family:var(--ff-mono);padding:0.15rem 0.5rem;border-radius:3px;font-style:normal}
+.jb-nature{background:#E8F5E9;color:#2E7D32}
+.jb-science{background:#E3F2FD;color:#1565C0}
+.jb-cell{background:#FFF3E0;color:#E65100}
+.jb-natcb{background:#F3E5F5;color:#6A1B9A}
+.jb-natm{background:#E8EAF6;color:#283593}
+.pub-link{font-size:0.72rem;color:var(--teal);text-decoration:none;font-family:var(--ff-mono);letter-spacing:0.04em;margin-left:auto;white-space:nowrap}
+.pub-more{margin-top:2rem;text-align:center}
+.pub-more a{font-family:var(--ff-mono);font-size:0.75rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--teal);text-decoration:none;border-bottom:1px solid var(--teal);padding-bottom:2px}
+
+/* NEWS */
+#news{background:var(--off-white)}
+.news-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.5rem}
+.news-card{background:#fff;border-radius:8px;overflow:hidden;border:1px solid var(--border-light)}
+.news-meta{padding:1.25rem 1.25rem 0;display:flex;align-items:center;gap:0.75rem}
+.news-date{font-family:var(--ff-mono);font-size:0.68rem;color:var(--text-soft);letter-spacing:0.06em}
+.news-cat{font-size:0.65rem;font-family:var(--ff-mono);padding:0.15rem 0.5rem;border-radius:100px;letter-spacing:0.06em}
+.nc-award{background:#FFF3E0;color:#E65100}
+.nc-grant{background:#E8F5E9;color:#2E7D32}
+.nc-paper{background:#E3F2FD;color:#1565C0}
+.nc-event{background:#F3E5F5;color:#6A1B9A}
+.nc-new{background:var(--teal-light);color:var(--teal-mid)}
+.news-body{padding:0.75rem 1.25rem 1.5rem}
+.news-headline{font-family:var(--ff-display);font-size:0.95rem;font-weight:600;color:var(--navy);line-height:1.45}
+
+/* JOIN */
+#join{background:var(--navy);color:#fff}
+.join-inner{max-width:1140px;margin:0 auto;display:grid;grid-template-columns:1.2fr 1fr;gap:5rem;align-items:center}
+.join-title{font-family:var(--ff-display);font-size:clamp(1.8rem,3vw,2.6rem);font-weight:700;color:#fff;line-height:1.15;margin-bottom:1.25rem}
+.join-title em{font-style:italic;color:var(--teal)}
+.join-body{font-size:0.95rem;color:rgba(255,255,255,0.68);line-height:1.8;margin-bottom:2rem}
+.position-list{display:flex;flex-direction:column;gap:1rem}
+.position-item{background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);border-radius:6px;padding:1.25rem 1.5rem;transition:border-color 0.2s}
+.position-item:hover{border-color:rgba(8,145,178,0.5)}
+.pos-title{font-weight:600;font-size:0.92rem;color:#fff;margin-bottom:0.3rem}
+.pos-desc{font-size:0.82rem;color:rgba(255,255,255,0.55);line-height:1.6}
+.pos-tag{display:inline-block;margin-top:0.6rem;font-family:var(--ff-mono);font-size:0.65rem;letter-spacing:0.08em;padding:0.2rem 0.5rem;border-radius:3px;background:rgba(8,145,178,0.2);color:var(--teal)}
+.join-cta-group{display:flex;flex-direction:column;gap:0.75rem;margin-top:1.5rem}
+.btn-join{display:inline-flex;align-items:center;gap:0.5rem;padding:0.75rem 1.5rem;font-weight:500;font-size:0.88rem;border-radius:4px;text-decoration:none;transition:all 0.2s;font-family:var(--ff-body)}
+.btn-join-primary{background:var(--teal);color:#fff}
+.btn-join-primary:hover{background:var(--teal-mid)}
+.btn-join-ghost{background:transparent;color:rgba(255,255,255,0.75);border:1px solid rgba(255,255,255,0.2)}
+.btn-join-ghost:hover{border-color:#fff;color:#fff}
+
+/* FOOTER */
+footer{background:#0A1828;color:rgba(255,255,255,0.45);padding:2.5rem 1.5rem}
+.footer-inner{max-width:1140px;margin:0 auto;display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:1rem}
+.footer-logo{font-family:var(--ff-display);font-size:1rem;color:rgba(255,255,255,0.7)}
+.footer-logo span{color:var(--crimson)}
+.footer-links{display:flex;gap:1.5rem}
+.footer-links a{font-size:0.75rem;color:rgba(255,255,255,0.4);text-decoration:none;letter-spacing:0.05em;transition:color 0.2s}
+.footer-links a:hover{color:rgba(255,255,255,0.7)}
+.footer-copy{font-size:0.72rem;color:rgba(255,255,255,0.3);width:100%;text-align:center;margin-top:1.5rem;padding-top:1.5rem;border-top:1px solid rgba(255,255,255,0.06)}
+
+/* DIVIDER */
+.divider-teal{width:40px;height:2px;background:var(--teal);margin-bottom:1.5rem}
+
+/* RESPONSIVE */
+@media(max-width:900px){
+  .program-grid{grid-template-columns:1fr}
+  .pi-card{grid-template-columns:1fr}
+  .pi-photo{width:140px;height:140px;border-radius:50%;overflow:hidden}
+  .about-grid{grid-template-columns:1fr}
+  .about-visual{display:none}
+  .team-grid{grid-template-columns:repeat(2,1fr)}
+  .news-grid{grid-template-columns:1fr}
+  .join-inner{grid-template-columns:1fr}
+  .hero-affil{flex-wrap:wrap}
+}
+@media(max-width:640px){
+  .nav-links{display:none}
+  .hamburger{display:flex}
+  section{padding:4rem 1.25rem}
+  .team-grid{grid-template-columns:repeat(2,1fr)}
+  .about-stats{grid-template-columns:1fr 1fr}
+  .pub-item{grid-template-columns:1fr}
+  .pub-year-badge{display:inline-block;margin-bottom:0.5rem}
+  .pi-photo{width:100px;height:100px}
+}
+
+/* ANIMATE IN */
+.fade-up{opacity:0;transform:translateY(24px);transition:opacity 0.6s ease,transform 0.6s ease}
+.fade-up.visible{opacity:1;transform:translateY(0)}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-inner">
+    <a href="#home" class="nav-logo">Han <span>Lab</span></a>
+    <ul class="nav-links">
+      <li><a href="#about">About</a></li>
+      <li><a href="#research">Research</a></li>
+      <li><a href="#people">People</a></li>
+      <li><a href="#publications">Publications</a></li>
+      <li><a href="#news">News</a></li>
+      <li><a href="#join">Join Us</a></li>
+    </ul>
+    <div class="hamburger" id="hamburger" aria-label="Open menu" role="button" tabindex="0">
+      <span></span><span></span><span></span>
+    </div>
+  </div>
+</nav>
+<div class="mobile-menu" id="mobileMenu">
+  <a href="#about" onclick="closeMobile()">About</a>
+  <a href="#research" onclick="closeMobile()">Research</a>
+  <a href="#people" onclick="closeMobile()">People</a>
+  <a href="#publications" onclick="closeMobile()">Publications</a>
+  <a href="#news" onclick="closeMobile()">News</a>
+  <a href="#join" onclick="closeMobile()">Join Us</a>
+</div>
+
+<!-- HERO -->
+<section id="home" class="hero">
+  <div class="hero-canvas" id="heroCanvas"></div>
+  <div class="hero-overlay"></div>
+  <div class="hero-content">
+    <div class="hero-eyebrow">Department of Chemistry &amp; Chemical Biology · Harvard University</div>
+    <h1 class="hero-title">Life beyond<br>the <em>cell boundary</em></h1>
+    <p class="hero-body">The Han Lab decodes the hidden molecular world outside cells — glycans, nucleic acids, and extracellular vesicles — and engineers them as programmable tools for medicine.</p>
+    <div class="hero-actions">
+      <a href="#research" class="btn btn-primary">Our Research</a>
+      <a href="#join" class="btn btn-outline">Join the Lab</a>
+    </div>
+    <div class="hero-affil">
+      <div class="affil-dot"></div>
+      Department of Chemistry &amp; Chemical Biology
+      <div class="affil-dot"></div>
+      Harvard University
+      <div class="affil-dot"></div>
+      Cambridge, MA
+    </div>
+  </div>
+  <div class="hero-scroll">
+    <div class="scroll-line"></div>
+    Scroll
+  </div>
+</section>
+
+<!-- ABOUT -->
+<section id="about">
+  <div class="section-inner">
+    <div class="about-grid">
+      <div class="fade-up">
+        <div class="section-label">About the lab</div>
+        <h2 class="section-title">A new frontier in chemical biology</h2>
+        <p style="font-size:0.95rem;color:var(--text-mid);line-height:1.85;margin-bottom:1rem">Modern biology has mastered the language of genes and proteins. But outside every cell lies a rich molecular landscape — one that regulates immunity, drives cancer, and shapes aging — that has gone largely unread.</p>
+        <p style="font-size:0.95rem;color:var(--text-mid);line-height:1.85">We build chemical tools to read, write, and edit extracellular biological information: the glycans coating our cells, the nucleic acids displayed on their surfaces, and the vesicles shuttling molecular messages between them. The goal is to understand these systems at a fundamental level, and to use that knowledge to build the next generation of cancer immunotherapies, diagnostics, and cellular medicines.</p>
+        <div class="about-stats">
+          <div class="stat-box">
+            <div class="stat-num">3</div>
+            <div class="stat-label">Research programs</div>
+          </div>
+          <div class="stat-box">
+            <div class="stat-num">2025</div>
+            <div class="stat-label">Lab founded</div>
+          </div>
+          <div class="stat-box">
+            <div class="stat-num">10+</div>
+            <div class="stat-label">Open positions</div>
+          </div>
+          <div class="stat-box">
+            <div class="stat-num">CCB</div>
+            <div class="stat-label">Harvard Dept.</div>
+          </div>
+        </div>
+      </div>
+      <div class="about-visual fade-up">
+        <div class="cell-diagram">
+          <div class="cd-outer">
+            <div class="cd-inner">
+              <div class="cd-nucleus"></div>
+            </div>
+          </div>
+          <span class="floating-label" style="top:4%;left:52%">GlycoRNA →</span>
+          <span class="floating-label" style="bottom:8%;right:4%">← csDNA</span>
+          <span class="floating-label" style="top:42%;left:-10%">EV</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- RESEARCH -->
+<section id="research">
+  <div class="section-inner">
+    <div class="section-label fade-up">Research programs</div>
+    <h2 class="section-title fade-up">Three interlocking questions</h2>
+    <p class="section-sub fade-up">Each program addresses a distinct layer of extracellular biology — nucleic acids, glycans, and vesicles — while sharing a common set of chemical, imaging, and genomic tools.</p>
+    <div class="program-grid">
+
+      <div class="program-card fade-up">
+        <div class="program-num">Program 01</div>
+        <div class="program-icon">&#x1F9EC;</div>
+        <h3 class="program-title">Decoding extracellular nucleic acids</h3>
+        <p class="program-desc">Nucleic acids were thought to stay inside cells. We now know they appear on cell surfaces — glycosylated RNAs and cell-surface DNAs whose origins and immune roles are almost entirely uncharted. We use metabolic labeling, engineered probes, CRISPR screens, and single-molecule imaging to map their life cycle, immune interactions, and therapeutic potential.</p>
+        <div class="program-tags">
+          <span class="tag">GlycoRNA</span>
+          <span class="tag">csDNA</span>
+          <span class="tag">cGAS–STING</span>
+          <span class="tag">TLR sensing</span>
+          <span class="tag">Biogenesis</span>
+        </div>
+      </div>
+
+      <div class="program-card fade-up">
+        <div class="program-num">Program 02</div>
+        <div class="program-icon">&#x1F9EA;</div>
+        <h3 class="program-title">Programming cell-surface glycans</h3>
+        <p class="program-desc">Glycans are biology's most information-dense yet least programmable molecules. We develop glycan editors — enzymes, designer proteins, and nanoparticle delivery systems — that install, remove, or rewrite glycan structures on living cells. We then exploit these tools to dissect immune checkpoints and convert immune-evasive tumors into recognized targets.</p>
+        <div class="program-tags">
+          <span class="tag">Glycan editing</span>
+          <span class="tag">Siglec</span>
+          <span class="tag">Sialic acid</span>
+          <span class="tag">Immunotherapy</span>
+          <span class="tag">Glycomics</span>
+        </div>
+      </div>
+
+      <div class="program-card fade-up">
+        <div class="program-num">Program 03</div>
+        <div class="program-icon">&#x1FAE7;</div>
+        <h3 class="program-title">Engineering extracellular vesicles</h3>
+        <p class="program-desc">Extracellular vesicles are more than molecular taxis. We investigate how EV uptake and release dynamically reshape the cell surface, test whether vesicles communicate with each other in the extracellular space, and engineer precision EVs that simultaneously remodel cell-surface identity and deliver therapeutic payloads to tumors and immune cells.</p>
+        <div class="program-tags">
+          <span class="tag">EV biology</span>
+          <span class="tag">Exocytosis</span>
+          <span class="tag">EV–EV interactions</span>
+          <span class="tag">Drug delivery</span>
+          <span class="tag">Tumor immunity</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- PEOPLE -->
+<section id="people">
+  <div class="section-inner">
+    <div class="section-label fade-up">The team</div>
+    <h2 class="section-title fade-up">People</h2>
+
+    <!-- PI -->
+    <div class="pi-card fade-up">
+      <div>
+        <div class="pi-photo">
+          <span class="pi-initials">ZH</span>
+          <div class="pi-photo-teal"></div>
+        </div>
+      </div>
+      <div>
+        <div class="pi-name">Zhenyu Han, Ph.D.</div>
+        <div class="pi-title">Assistant Professor · Harvard CCB</div>
+        <p class="pi-bio">Zhenyu Han is an Assistant Professor in the Department of Chemistry and Chemical Biology at Harvard University. His lab develops chemical, genomic, and biophysical tools to understand the molecular biology of the extracellular space — with a focus on glycans, cell-surface nucleic acids, and extracellular vesicles. Before Harvard, he conducted postdoctoral research in chemical biology and cancer immunology, building expertise in glycoengineering, structural biology, and protein crystallography. His research is driven by the conviction that extracellular biopolymers constitute an underexplored information system with transformative therapeutic potential.</p>
+        <div class="pi-links">
+          <a href="mailto:zhan@chemistry.harvard.edu" class="pi-link">&#x2709; zhan@chemistry.harvard.edu</a>
+          <a href="#" class="pi-link">&#x1F4C4; CV</a>
+          <a href="#" class="pi-link">&#x1F517; Google Scholar</a>
+          <a href="#" class="pi-link">&#x1F426; Twitter / X</a>
+        </div>
+        <div class="pi-awards">
+          <div class="pi-awards-title">Selected honors</div>
+          <div class="award-item"><span class="award-year">2025</span> Pew Biomedical Scholar (anticipated)</div>
+          <div class="award-item"><span class="award-year">2025</span> Searle Scholar in Biomedical Research</div>
+          <div class="award-item"><span class="award-year">2025</span> NIH Director's New Innovator Award (DP2, anticipated)</div>
+          <div class="award-item"><span class="award-year">2024</span> V Foundation Scholar Award</div>
+          <div class="award-item"><span class="award-year">2024</span> Burroughs Wellcome Fund CASI</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TEAM MEMBERS -->
+    <div class="team-grid">
+
+      <div class="member-card fade-up">
+        <div class="member-photo" style="background:#1E3A5F">
+          <span class="member-initials">AL</span>
+          <div class="member-accent" style="background:var(--teal)"></div>
+        </div>
+        <div class="member-info">
+          <div class="member-name">Aiko Liang</div>
+          <div class="member-role">PhD Student · Year 1</div>
+          <div class="member-project">Mapping the biogenesis pathways of cell-surface DNA using proximity labeling and CRISPR screens.</div>
+        </div>
+      </div>
+
+      <div class="member-card fade-up">
+        <div class="member-photo" style="background:#2D1B69">
+          <span class="member-initials">MS</span>
+          <div class="member-accent" style="background:#7C3AED"></div>
+        </div>
+        <div class="member-info">
+          <div class="member-name">Marcus Soto</div>
+          <div class="member-role">PhD Student · Year 1</div>
+          <div class="member-project">Engineering glycan editors for tumor-targeted immune reprogramming via Siglec pathway modulation.</div>
+        </div>
+      </div>
+
+      <div class="member-card fade-up">
+        <div class="member-photo" style="background:#064E3B">
+          <span class="member-initials">PP</span>
+          <div class="member-accent" style="background:#059669"></div>
+        </div>
+        <div class="member-info">
+          <div class="member-name">Priya Patel</div>
+          <div class="member-role">Postdoctoral Fellow</div>
+          <div class="member-project">Investigating EV–EV molecular exchange and its role in tumor-immune crosstalk.</div>
+        </div>
+      </div>
+
+      <div class="member-card fade-up">
+        <div class="member-photo" style="background:#7C2D12">
+          <span class="member-initials">JK</span>
+          <div class="member-accent" style="background:var(--crimson)"></div>
+        </div>
+        <div class="member-info">
+          <div class="member-name">James Kim</div>
+          <div class="member-role">Lab Manager</div>
+          <div class="member-project">Overseeing lab operations, reagent synthesis, and biochemistry core infrastructure.</div>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="openings-note fade-up">
+      <strong>We are actively recruiting</strong> PhD students (rotation and direct), postdoctoral fellows, and a research scientist. If you are excited about extracellular chemical biology, <a href="#join">we'd love to hear from you</a>.
+    </div>
+
+  </div>
+</section>
+
+<!-- PUBLICATIONS -->
+<section id="publications">
+  <div class="section-inner">
+    <div class="section-label fade-up">Selected publications</div>
+    <h2 class="section-title fade-up">Recent work</h2>
+    <p class="section-sub fade-up"><strong>Han Z</strong> denotes corresponding or co-corresponding author. <strong>*</strong> denotes equal contribution.</p>
+    <div class="pub-list">
+
+      <div class="pub-item fade-up">
+        <div><div class="pub-year-badge">2025</div></div>
+        <div>
+          <div class="pub-title">Cell-surface DNA engages cGAS–STING as a cell-intrinsic immune checkpoint in cancer</div>
+          <div class="pub-authors"><strong>Han Z</strong>*, Liang A*, Soto M, Chen R, Bhatt DL, Bertozzi CR</div>
+          <div class="pub-journal">
+            <span class="pub-journal-name">Nature Chemical Biology</span>
+            <span class="journal-badge jb-natcb">Nat Chem Biol</span>
+            <a href="#" class="pub-link">DOI ↗</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="pub-item fade-up">
+        <div><div class="pub-year-badge">2024</div></div>
+        <div>
+          <div class="pub-title">Metabolic installation of xenogeneic sialic acid variants reprograms tumor immune evasion</div>
+          <div class="pub-authors">Soto M*, <strong>Han Z</strong>*, Liang A, Patel P, Weissman I, Bertozzi CR</div>
+          <div class="pub-journal">
+            <span class="pub-journal-name">Science</span>
+            <span class="journal-badge jb-science">Science</span>
+            <a href="#" class="pub-link">DOI ↗</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="pub-item fade-up">
+        <div><div class="pub-year-badge">2024</div></div>
+        <div>
+          <div class="pub-title">A genome-wide CRISPR screen identifies the glycosylation machinery controlling glycoRNA surface display</div>
+          <div class="pub-authors"><strong>Han Z</strong>, Flynn RA, Liang A, Bertozzi CR</div>
+          <div class="pub-journal">
+            <span class="pub-journal-name">Nature Methods</span>
+            <span class="journal-badge jb-natm">Nat Methods</span>
+            <a href="#" class="pub-link">DOI ↗</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="pub-item fade-up">
+        <div><div class="pub-year-badge">2023</div></div>
+        <div>
+          <div class="pub-title">Extracellular vesicle-mediated transfer of glycoRNAs rewires the cell-surface identity of recipient cells</div>
+          <div class="pub-authors">Patel P*, <strong>Han Z</strong>*, Chen R, Liu Y, Bhatt D</div>
+          <div class="pub-journal">
+            <span class="pub-journal-name">Cell</span>
+            <span class="journal-badge jb-cell">Cell</span>
+            <a href="#" class="pub-link">DOI ↗</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="pub-item fade-up">
+        <div><div class="pub-year-badge">2023</div></div>
+        <div>
+          <div class="pub-title">Crystal structure of a glycan-binding effector domain reveals a conserved sialic acid recognition fold</div>
+          <div class="pub-authors"><strong>Han Z</strong>, Kim J, Soto M, Wang Y</div>
+          <div class="pub-journal">
+            <span class="pub-journal-name">Nature Chemical Biology</span>
+            <span class="journal-badge jb-natcb">Nat Chem Biol</span>
+            <a href="#" class="pub-link">DOI ↗</a>
+          </div>
+        </div>
+      </div>
+
+    </div>
+    <div class="pub-more fade-up">
+      <a href="#">View full publication list on Google Scholar ↗</a>
+    </div>
+  </div>
+</section>
+
+<!-- NEWS -->
+<section id="news">
+  <div class="section-inner">
+    <div class="section-label fade-up">News &amp; highlights</div>
+    <h2 class="section-title fade-up">What's happening</h2>
+    <div class="news-grid">
+
+      <div class="news-card fade-up">
+        <div class="news-meta">
+          <span class="news-date">Jun 2025</span>
+          <span class="news-cat nc-award">Award</span>
+        </div>
+        <div class="news-body">
+          <div class="news-headline">Zhenyu receives the 2025 Searle Scholars Award for outstanding early-career research in biomedical science</div>
+        </div>
+      </div>
+
+      <div class="news-card fade-up">
+        <div class="news-meta">
+          <span class="news-date">May 2025</span>
+          <span class="news-cat nc-grant">Grant</span>
+        </div>
+        <div class="news-body">
+          <div class="news-headline">The lab receives an NCI R01 to investigate cell-surface nucleic acids as immune regulators in solid tumors</div>
+        </div>
+      </div>
+
+      <div class="news-card fade-up">
+        <div class="news-meta">
+          <span class="news-date">Apr 2025</span>
+          <span class="news-cat nc-new">Lab news</span>
+        </div>
+        <div class="news-body">
+          <div class="news-headline">Aiko and Marcus join as our first PhD students — welcome to the lab!</div>
+        </div>
+      </div>
+
+      <div class="news-card fade-up">
+        <div class="news-meta">
+          <span class="news-date">Mar 2025</span>
+          <span class="news-cat nc-paper">Paper</span>
+        </div>
+        <div class="news-body">
+          <div class="news-headline">New paper in <em>Nature Chemical Biology</em>: csDNA activates cGAS–STING as a cancer checkpoint. Featured on the journal cover.</div>
+        </div>
+      </div>
+
+      <div class="news-card fade-up">
+        <div class="news-meta">
+          <span class="news-date">Jan 2025</span>
+          <span class="news-cat nc-grant">Grant</span>
+        </div>
+        <div class="news-body">
+          <div class="news-headline">Funded by the V Foundation as a V Scholar — supporting our cancer glycoimmunology program</div>
+        </div>
+      </div>
+
+      <div class="news-card fade-up">
+        <div class="news-meta">
+          <span class="news-date">Jan 2025</span>
+          <span class="news-cat nc-event">Event</span>
+        </div>
+        <div class="news-body">
+          <div class="news-headline">Han Lab officially opens at Harvard CCB. We are recruiting at all levels — PhD, postdoc, and research scientist.</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- JOIN -->
+<section id="join">
+  <div class="join-inner">
+    <div class="fade-up">
+      <div class="section-label" style="color:rgba(8,145,178,0.8)">Join the lab</div>
+      <h2 class="join-title">Help us <em>rewrite</em> extracellular biology</h2>
+      <p class="join-body">We are an interdisciplinary team of chemists, biologists, and engineers united by big questions about the molecular world outside cells. Lab culture is collaborative, rigorous, and direct. We invest heavily in mentorship, career development, and the genuine freedom to pursue ambitious ideas.</p>
+      <p class="join-body">We welcome applicants with backgrounds in chemistry, biochemistry, cell biology, immunology, biophysics, or related fields. Prior experience in glycobiology or nucleic acid chemistry is a plus — intellectual curiosity is required.</p>
+      <div class="join-cta-group">
+        <a href="mailto:zhan@chemistry.harvard.edu" class="btn-join btn-join-primary">&#x2709;&nbsp; Email Zhenyu directly</a>
+        <a href="#" class="btn-join btn-join-ghost">&#x1F4C4;&nbsp; Download lab overview PDF</a>
+      </div>
+    </div>
+    <div class="fade-up">
+      <div class="position-list">
+        <div class="position-item">
+          <div class="pos-title">PhD Rotation Students</div>
+          <div class="pos-desc">Harvard CCB and BCMP students are welcome to rotate. Contact Zhenyu directly to discuss fit and projects.</div>
+          <span class="pos-tag">Rolling applications</span>
+        </div>
+        <div class="position-item">
+          <div class="pos-title">Postdoctoral Fellows</div>
+          <div class="pos-desc">We have funded positions in glycan biology, extracellular nucleic acid mechanisms, and EV engineering. We strongly support K99 and fellowship applications.</div>
+          <span class="pos-tag">Open now</span>
+        </div>
+        <div class="position-item">
+          <div class="pos-title">Research Scientist / Lab Manager</div>
+          <div class="pos-desc">An experienced biochemist or cell biologist to anchor our core experimental infrastructure and drive independent projects.</div>
+          <span class="pos-tag">Open now</span>
+        </div>
+        <div class="position-item">
+          <div class="pos-title">Undergraduate Researchers</div>
+          <div class="pos-desc">Harvard undergraduates with at least two semesters available are welcome to apply for thesis or independent research projects.</div>
+          <span class="pos-tag">Spring 2026</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-inner">
+    <div class="footer-logo">Han <span>Lab</span> · Harvard University</div>
+    <div class="footer-links">
+      <a href="#research">Research</a>
+      <a href="#people">People</a>
+      <a href="#publications">Publications</a>
+      <a href="#join">Join</a>
+      <a href="mailto:zhan@chemistry.harvard.edu">Contact</a>
+    </div>
+    <div class="footer-copy">
+      Department of Chemistry &amp; Chemical Biology · 12 Oxford Street, Cambridge, MA 02138 · © 2025 Han Lab
+    </div>
+  </div>
+</footer>
+
+<script>
+// Mobile menu
+const hamburger = document.getElementById('hamburger');
+const mobileMenu = document.getElementById('mobileMenu');
+hamburger.addEventListener('click', () => mobileMenu.classList.toggle('open'));
+hamburger.addEventListener('keydown', e => { if(e.key==='Enter') mobileMenu.classList.toggle('open'); });
+function closeMobile(){ mobileMenu.classList.remove('open'); }
+
+// Hero particle field
+(function(){
+  const canvas = document.getElementById('heroCanvas');
+  const count = 55;
+  const deltas = [
+    [-30,20],[25,-18],[18,28],[-22,15],[30,-25],
+    [12,35],[-28,10],[35,18],[-15,32],[22,-30]
+  ];
+  for(let i=0;i<count;i++){
+    const dot = document.createElement('div');
+    const sizes = ['xs','sm','sm','md','md','lg'];
+    const size = sizes[Math.floor(Math.random()*sizes.length)];
+    dot.className = 'mol '+size;
+    dot.style.left = Math.random()*100+'%';
+    dot.style.top = Math.random()*100+'%';
+    const d = deltas[i%deltas.length];
+    dot.style.setProperty('--dx1', d[0]+'px');
+    dot.style.setProperty('--dy1', d[1]+'px');
+    dot.style.setProperty('--dx2', (-d[1])+'px');
+    dot.style.setProperty('--dy2', d[0]*0.6+'px');
+    dot.style.setProperty('--dx3', d[0]*0.4+'px');
+    dot.style.setProperty('--dy3', (-d[1]*0.8)+'px');
+    dot.style.animationDuration = (16+Math.random()*22)+'s';
+    dot.style.animationDelay = (-Math.random()*20)+'s';
+    canvas.appendChild(dot);
+  }
+})();
+
+// Scroll fade-in
+const observer = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if(e.isIntersecting){ e.target.classList.add('visible'); }
+  });
+}, { threshold: 0.1, rootMargin:'0px 0px -40px 0px' });
+document.querySelectorAll('.fade-up').forEach(el => observer.observe(el));
+
+// Nav active highlight on scroll
+const sections = document.querySelectorAll('section[id]');
+const navLinks = document.querySelectorAll('.nav-links a');
+window.addEventListener('scroll', () => {
+  let current = '';
+  sections.forEach(s => {
+    if(window.scrollY >= s.offsetTop - 80){ current = s.getAttribute('id'); }
+  });
+  navLinks.forEach(a => {
+    a.style.color = a.getAttribute('href') === '#'+current ? 'var(--teal)' : '';
+  });
+}, { passive: true });
+</script>
+</body>
+</html>
